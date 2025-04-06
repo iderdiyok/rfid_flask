@@ -20,7 +20,7 @@ def save_user():
 
         formatted_time = get_german_time(as_string=True)
         if temp_user["action"] == "Betreten":
-            history_collection.insert_one({"uid": temp_user["uid"], "station": temp_user["station"], "start_time": formatted_time, "end_time": None, "duration": None})
+            history_collection.insert_one({"uid": temp_user["uid"], "station": temp_user["station"], "start_time": formatted_time, "end_time": None, "duration": None, "edited_time": formatted_time})
         elif temp_user["action"] == "Verlassen":
             last_entry = history_collection.find_one({"uid": temp_user["uid"], "station": temp_user["station"], "end_time": None}, sort=[('_id', -1)])
             if last_entry:
@@ -28,7 +28,7 @@ def save_user():
                 start_dt = pytz.timezone("Europe/Berlin").localize(start_dt)
                 duration = get_german_time() - start_dt
                 duration_str = f"{duration.seconds // 3600}h {duration.seconds % 3600 // 60}min"
-                history_collection.update_one({"_id": last_entry["_id"]}, {"$set": {"end_time": formatted_time, "duration": duration_str}})
+                history_collection.update_one({"_id": last_entry["_id"]}, {"$set": {"end_time": formatted_time, "duration": duration_str, "edited_time": formatted_time}})
 
         update_station(temp_user["station"], temp_user["action"])
         temp_users_collection.delete_one({'uid': temp_user_id})

@@ -10,7 +10,7 @@ def get_status():
     stations_raw = list(stations_collection.find())
     stations = [{k: v for k, v in s.items() if k != "_id"} for s in stations_raw]
 
-    raw_history = list(history_collection.find().sort("end_time", -1).limit(10))
+    raw_history = list(history_collection.find().sort("edited_time", -1).limit(10))
     history = []
     for entry in raw_history:
         uid = entry.get("uid")

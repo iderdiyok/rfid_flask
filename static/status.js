@@ -39,8 +39,10 @@ export function updateStatus(showFullNameForm) {
 
             const historyList = document.getElementById("history");
             historyList.innerHTML = "";
-            const lastFive = (data.history || []).slice(-10);
-
+            const lastFive = (data.history || []);
+            if (lastFive.length === 0) {
+                historyList.innerHTML = "<li>- Keine Einträge vorhanden -</li>";
+            }
             lastFive.forEach(entry => {
                 const li = document.createElement("li");
                 let text = `${entry.userFullName} - ${entry.station} (${entry.action}) um ${entry.timestamp}`;
@@ -55,7 +57,7 @@ export function updateStatus(showFullNameForm) {
 
             const estimatedList = document.getElementById("estimated_times");
             
-            estimatedList.innerHTML = data.estimated_times.length > 0 ? "" : "- Keine Verlassenszeiten vorhanden -";
+            estimatedList.innerHTML = data.estimated_times.length > 0 ? "" : "<li>- Keine Einträge vorhanden -</li>";
             (data.estimated_times || []).forEach(time => {
                 const li = document.createElement("li");
                 li.textContent = `${time.station}: ${time.leave_time} Uhr`;
